@@ -1,5 +1,5 @@
 import Image from "./Image"
-import Button from "../assets/ui/Button"
+import Button from "../ui/Button"
 import { IProducts } from "../interfaces"
 import { textSlicer } from "../Utils/functions"
 
@@ -9,7 +9,7 @@ product:IProducts
 const ProductCard = ( {product}:IProps) => {
   const {title , description , image,price} =product
   return (
-    <div className="border p-2  m-5 mx-w-sm md:max-w-lg mx-auto md:mx-0 flex flex-col rounded-md ">
+    <div className="border p-2  m-5 mx-w-sm md:max-w-lg mx-auto md:mx-0 flex flex-col rounded-md card">
       
   
       <Image imageUrl={image} alt="product name" className=" rounded-md w-full h-52 "/>
