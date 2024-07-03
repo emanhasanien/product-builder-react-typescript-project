@@ -8,3 +8,13 @@ export interface IProducts {
     image: string,
 
 }
+
+export interface IFormInputs{
+
+    
+        id:string,
+        name:string,
+        label:string,
+        type:string
+      
+}
