@@ -1,6 +1,6 @@
 
 export interface IProducts {
-    id: number | undefined,
+    id?: number | undefined,
     title: string,
     price: string,
     description: string,
@@ -12,8 +12,8 @@ export interface IProducts {
 export interface IFormInputs{
 
     
-        id:string,
-        name:string,
+        id?:string,
+        name: 'title' | 'description' | 'image'| 'price',
         label:string,
         type:string
       
