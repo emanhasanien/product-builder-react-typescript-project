@@ -1,12 +1,12 @@
 
 export interface IProducts {
-    id?: number | undefined,
+    id?: string | undefined,
     title: string,
     price: string,
     description: string,
     category:string,
     image: string,
-
+    colors: string[]
 }
 
 export interface IFormInputs{
@@ -17,4 +17,10 @@ export interface IFormInputs{
         label:string,
         type:string
       
+}
+
+export interface ICategory {
+    id: string,
+    name:string,
+    imageUrl:string
 }

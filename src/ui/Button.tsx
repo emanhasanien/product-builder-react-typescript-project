@@ -4,7 +4,7 @@ interface IProps  extends React.DOMAttributes<HTMLButtonElement>{
     children:ReactNode,
     className:string,
     width?:"w-full" | "w-fit"
-    type: string
+    type?: string
 }
 const Button = ( {children, className,width="w-full", ... rest}:IProps) => {
 
