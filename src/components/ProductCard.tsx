@@ -7,12 +7,29 @@ import ProductColors from "./ProductColors";
 
 interface IProps {
   product: IProducts;
+  setProductToEdit: (product :IProducts) => void,
+  openEditModal: ()=> void,
+  setProductToEditIndx: (value:number) => void, 
+  indx: number
 }
-const ProductCard = ({ product }: IProps) => {
-  const { title, description, image, price, colors } = product;
+
+const ProductCard = ({ product, setProductToEdit , openEditModal, setProductToEditIndx , indx}: IProps) => {
+  const { title, description, image, price, colors, category } = product;
 
   const renderProductColors = colors.map((color) => ( <ProductColors key={color} color={color} />
   ));
+
+  // ! ----------------- HANDLER ----------------------
+
+  const EditHandler = () => {
+    setProductToEdit(product);
+    setProductToEditIndx(indx)
+    openEditModal()
+    console.log(product);
+    
+  }
+
+
   
   return (
     <div className="border p-2  m-5 mx-w-sm md:max-w-lg mx-auto md:mx-0 flex flex-col rounded-md card">
@@ -28,9 +45,9 @@ const ProductCard = ({ product }: IProps) => {
       <div className="flex items-center space-x-1">{renderProductColors}</div>
 
       <div className="flex items-center justify-between">
-        <span>{price}</span>
+        <span> ${price}</span>
        <div className=" flex items-center space-x-1 text-gray-400">
-       <span>{product.category}</span>
+       <span>{category}</span>
        <Image
           imageUrl={image}
           alt="product name"
@@ -45,7 +62,7 @@ const ProductCard = ({ product }: IProps) => {
         <Button
           className="bg-indigo-700 "
           width="w-full"
-          onClick={() => console.log("clicked")}
+          onClick={EditHandler}
         >
           {" "}
           EDIT
