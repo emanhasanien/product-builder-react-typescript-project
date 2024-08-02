@@ -12,6 +12,7 @@ import ProductColors from "./components/ProductColors";
 import { v4 as uuid } from "uuid";
 import Select from "./ui/Select";
 import { ProductNameTypes } from "./Types";
+import toast, { Toaster } from 'react-hot-toast';
 
 const App = () => {
   const defaultProductObj = {
@@ -26,13 +27,15 @@ const App = () => {
   // !     --------------- STATE ------------------------
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [isOpenConfirmedModal, setIsOpenConfirmedModal] = useState(false);
 
   const [products, setProducts] = useState<IProducts[]>(productList);
 
   const [product, setProduct] = useState<IProducts>(defaultProductObj);
 
-  const [productToEdit, setProductToEdit] =  useState<IProducts>(defaultProductObj);
-  const [productToEditIndx, setProductToEditIndx] =  useState<number>(0);
+  const [productToEdit, setProductToEdit] =
+    useState<IProducts>(defaultProductObj);
+  const [productToEditIndx, setProductToEditIndx] = useState<number>(0);
 
   const [tempColors, setTempColors] = useState<string[]>([]);
 
@@ -45,8 +48,6 @@ const App = () => {
     price: "",
   });
 
- 
-  
   // ! ---------------- HANDLER -------------------------
 
   const closeModal = () => {
@@ -63,6 +64,14 @@ const App = () => {
 
   const openEditModal = () => {
     setIsOpenEditModal(true);
+  };
+
+  const closeConfirmedModal = () => {
+    setIsOpenConfirmedModal(false);
+  };
+
+  const openConfirmedModal = () => {
+    setIsOpenConfirmedModal(true);
   };
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -126,14 +135,18 @@ const App = () => {
     setProduct(defaultProductObj);
     setTempColors([]);
     closeModal();
-    console.log("Send Data To Backend Server");
+    toast.success('Product has been Added' ,{
+      style:{
+        backgroundColor:'black',
+        color:'white'
+      }
+    })
   };
 
   const submitEditHandler = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const { title, description, image, price,category } = productToEdit;
+    const { title, description, image, price, category } = productToEdit;
     console.log(productToEdit);
-    
 
     const errors = productValidation({
       title,
@@ -151,22 +164,46 @@ const App = () => {
       return;
     }
 
-    const updatedProducts = [... products]
-    updatedProducts[productToEditIndx]= {...productToEdit ,colors: tempColors.concat(productToEdit.colors) }
-console.log(tempColors.concat(productToEdit.colors) );
+    const updatedProducts = [...products];
+    updatedProducts[productToEditIndx] = {
+      ...productToEdit,
+      colors: tempColors.concat(productToEdit.colors),
+    };
+  
 
-    setProducts(updatedProducts)
+    setProducts(updatedProducts);
     setProductToEdit(defaultProductObj);
     setTempColors([]);
     closeEditModal();
-    console.log("Send Data To Backend Server");
+    toast.success('Product has been Edit' ,{
+      style:{
+        backgroundColor:'black',
+        color:'white'
+      }
+    })
   };
 
   const cancelHandler = () => {
     setProduct(defaultProductObj);
     closeModal();
     closeEditModal();
+    closeConfirmedModal()
+  
   };
+
+
+  const onRemoeHandler =()=> {
+
+    const filtered = products.filter(product => product.id !== productToEdit.id )
+    setProducts(filtered);
+    closeConfirmedModal()
+    toast.success('Product has been deleted' ,{
+      style:{
+        backgroundColor:'black',
+        color:'white'
+      }
+    })
+  }
 
   // ! ------------------- RENDER -----------------------------
 
@@ -176,8 +213,9 @@ console.log(tempColors.concat(productToEdit.colors) );
       product={product}
       setProductToEdit={setProductToEdit}
       openEditModal={openEditModal}
-      setProductToEditIndx= {setProductToEditIndx}
+      setProductToEditIndx={setProductToEditIndx}
       indx={indx}
+      openConfirmedModal={openConfirmedModal}
     />
   ));
 
@@ -310,13 +348,23 @@ console.log(tempColors.concat(productToEdit.colors) );
           {renderProductEditWithErrMsg("image", "Product image URL", "image")}
           {renderProductEditWithErrMsg("price", "Product Price", "price")}
 
-          <Select selected={{name: productToEdit.category ,imageUrl: productToEdit.image}} setSelected={value => {setProductToEdit({...productToEdit, category:value.name , image:value.imageUrl}) }}
-           />
+          <Select
+            selected={{
+              name: productToEdit.category,
+              imageUrl: productToEdit.image,
+            }}
+            setSelected={(value) => {
+              setProductToEdit({
+                ...productToEdit,
+                category: value.name,
+                image: value.imageUrl,
+              });
+            }}
+          />
 
           <div className="flex items-center space-x-1">
             {renderProductColors}
           </div>
-
 
           <div className="flex items-center space-x-1 flex-wrap ">
             {tempColors.concat(productToEdit.colors).map((color) => (
@@ -348,9 +396,37 @@ console.log(tempColors.concat(productToEdit.colors) );
         </form>
       </Modal>
 
+      {/*REMOVE PRODUCT Model */}
+
+      <Modal
+        isOpen={isOpenConfirmedModal}
+        closeModal={closeConfirmedModal}
+        title="Are You Sure To Remove This Product from store?"
+        description="You are about to delete the selected product. This action cannot be undone. Please confirm your decision below.
+           Click Remove to proceed with the deletion or Cancel to go back"
+      >
+        <div className="flex items-center space-x-3">
+          <Button
+            className="rounded-lg w-full bg-red-800 text-white p-2 "
+            type="submit"
+            onClick={onRemoeHandler}
+          >
+            Remove
+          </Button>
+
+          <Button
+            className=" rounded-lg w-full bg-gray-300 hover:bg-gray-400 p-2"
+            onClick={cancelHandler}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Modal>
+
       <div className="m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-5">
         {renderProductList}
       </div>
+      <Toaster />
     </main>
   );
 };

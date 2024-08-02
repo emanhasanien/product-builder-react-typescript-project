@@ -10,10 +10,11 @@ interface IProps {
   setProductToEdit: (product :IProducts) => void,
   openEditModal: ()=> void,
   setProductToEditIndx: (value:number) => void, 
-  indx: number
+  indx: number,
+  openConfirmedModal: ()=> void
 }
 
-const ProductCard = ({ product, setProductToEdit , openEditModal, setProductToEditIndx , indx}: IProps) => {
+const ProductCard = ({ product, setProductToEdit , openEditModal, setProductToEditIndx , indx ,openConfirmedModal}: IProps) => {
   const { title, description, image, price, colors, category } = product;
 
   const renderProductColors = colors.map((color) => ( <ProductColors key={color} color={color} />
@@ -25,8 +26,12 @@ const ProductCard = ({ product, setProductToEdit , openEditModal, setProductToEd
     setProductToEdit(product);
     setProductToEditIndx(indx)
     openEditModal()
-    console.log(product);
-    
+  
+  }
+
+  const onRemove = ()=> {
+    openConfirmedModal()
+    setProductToEdit(product)
   }
 
 
@@ -68,7 +73,9 @@ const ProductCard = ({ product, setProductToEdit , openEditModal, setProductToEd
           EDIT
         </Button>
 
-        <Button className="bg-red-800 ">DELETE</Button>
+        <Button className="bg-red-800 " 
+       onClick={onRemove}
+        >DELETE</Button>
       </div>
     </div>
   );

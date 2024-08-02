@@ -5,10 +5,11 @@ interface IProps{
   isOpen : boolean,
   closeModal: () => void,
   title?: string,
+  description?: string,
   children: ReactNode
 }
 
-const Modal = ( {isOpen, closeModal ,title, children }:IProps) => {
+const Modal = ( {isOpen, closeModal ,title, children,description }:IProps) => {
   
 
   return (
@@ -47,6 +48,9 @@ const Modal = ( {isOpen, closeModal ,title, children }:IProps) => {
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
                    {title}
+                  <p className='text-sm text-gray-500'>
+                  {description}
+                  </p>
                   </Dialog.Title>
 
 
